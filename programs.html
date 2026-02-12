@@ -1,0 +1,646 @@
+<!DOCTYPE html><html lang="he" dir="rtl" data-zappy-site-type="ecommerce"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>תוכניות - ביזכושר</title>
+  <meta name="description" content="Programs - ביזכושר provides professional כושר ובריאות services. Specializing in כושר.">
+  <meta name="keywords" content="כושר, תוכנית אימונים למתחילים בכושר, אימוני כושר להורים עסוקים, כושר ובריאות לאנשי מקצוע">
+  <meta name="robots" content="index, follow">
+  
+  <meta property="og:title" content="תוכניות - ביזכושר">
+  <meta property="og:description" content="Programs - ביזכושר provides professional כושר ובריאות services. Specializing in כושר.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="תוכניות - ביזכושר">
+  <meta name="twitter:description" content="Programs - ביזכושר provides professional כושר ובריאות services. Specializing in כושר.">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+<!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'f415b57f-6109-420e-be5c-2c0361dfa1f5',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: 44px !important; background: transparent !important; border: none !important; cursor: pointer !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="חיפוש">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "f415b57f-6109-420e-be5c-2c0361dfa1f5";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+  
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/business-logo.webp" alt="ביזכושר" class="logo" />
+      </a>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/products">
+        מוצרים
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/products">כל המוצרים</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/programs">תוכניות</a></li><li><a href="/about">אודות</a></li><li><a href="/contact">צור קשר</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
+    
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
+      <div class="catalog-menu-container">
+        <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+  
+  <main>
+    <section class="programs-hero-section" data-layout-spec="Programs-hero" data-hero-type="fullscreen-scrim">
+  <div class="programs-hero-bg-wrapper">
+    <img data-placeholder="programs-hero-bg" data-context="Dynamic fitness training scene for a premium wellness business - athletes or trainers in motion during an intense workout session in a modern gym with professional equipment, natural lighting, vibrant energy, showing strength and conditioning exercises, wide angle shot capturing movement and dedication" width="1920" height="800" src="/assets/site-programs-hero-bg.webp" alt="תוכניות אימון דינמיות" class="programs-hero-bg">
+  </div>
+  <div class="programs-hero-scrim" aria-hidden="true"></div>
+  <div class="programs-hero-overlay">
+    <div class="programs-hero-container">
+      <div class="programs-hero-content">
+        <h1 class="programs-hero-headline">תוכניות עם מבנה וגמישות</h1>
+        <h3 class="programs-hero-subtitle">אפשרויות מותאמות לחיזוק, כושר אירובי והתאוששות — בקצב שלך</h3>
+        <a href="/contact" class="programs-hero-cta btn-primary">מצא את התוכנית המתאימה</a>
+      </div>
+    </div>
+  </div>
+  <div class="programs-hero-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,50 Q200,42 400,48 T800,45 Q1000,50 1200,42 L1200,80 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="programs-plans-section" data-layout-spec="Programs-plans">
+  <div class="programs-plans-container">
+    <div class="programs-plans-intro">
+      <h2>בחרו את המסלול שלכם</h2>
+      <p>כל תוכנית בנויה לפי מטרה ספציפית ולוח זמנים ריאלי. בין אם אתם מחפשים לבנות כוח, לשפר סיבולת או לשמור על איזון בשגרה עמוסה — יש כאן מסלול שמתאים בדיוק לכם.</p>
+    </div>
+
+    <div class="programs-plans-grid">
+      <!-- Plan Card 1 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="18" width="24" height="4" rx="2" stroke="currentColor" stroke-width="2" fill="none"></rect>
+            <circle cx="12" cy="20" r="3" stroke="currentColor" stroke-width="2" fill="none"></circle>
+            <circle cx="28" cy="20" r="3" stroke="currentColor" stroke-width="2" fill="none"></circle>
+            <path d="M20 12V28" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <h3>יסודות הכוח</h3>
+        <p>תוכנית מבוססת משקולות ותרגילים פונקציונליים לבניית בסיס חזק ויציב. מתאימה למי שמתחיל או רוצה לחזק את היכולת הבסיסית.</p>
+        <p class="programs-plan-specs">8 שבועות · 3 אימונים בשבוע · 45 דקות</p>
+      </article>
+
+      <!-- Plan Card 2 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 25L15 15L20 22L25 12L30 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+            <circle cx="15" cy="15" r="2" fill="currentColor"></circle>
+            <circle cx="25" cy="12" r="2" fill="currentColor"></circle>
+            <path d="M8 30H32" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <h3>גוף אתלטי</h3>
+        <p>שילוב של אימוני כוח, פליומטריקה ותנועות דינמיות לפיתוח גוף חטוב, מהיר וחזק. אידיאלי למי שמחפש ביצועים ומראה אתלטי.</p>
+        <p class="programs-plan-specs">10 שבועות · 4 אימונים בשבוע · 50 דקות</p>
+      </article>
+
+      <!-- Plan Card 3 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="2" fill="none"></circle>
+            <path d="M20 8V20L28 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="20" cy="20" r="2" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <h3>סיבולת ומיצוי</h3>
+        <p>תוכנית קרדיו-ווסקולרית אינטנסיבית המשלבת ריצה, רכיבה ואימוני HIIT. מעלה את הקצב, שורפת קלוריות ומחזקת את הלב והריאות.</p>
+        <p class="programs-plan-specs">6 שבועות · 4 אימונים בשבוע · 40 דקות</p>
+      </article>
+
+      <!-- Plan Card 4 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 20C12 20 15 15 20 15C25 15 28 20 28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path>
+            <path d="M12 20C12 20 15 25 20 25C25 25 28 20 28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path>
+            <circle cx="20" cy="20" r="3" stroke="currentColor" stroke-width="2" fill="none"></circle>
+          </svg>
+        </div>
+        <h3>איפוס תנועתי</h3>
+        <p>מיקוד במתיחות, גמישות ותנועתיות פונקציונלית. משחרר מתחים, משפר טווחי תנועה ומונע פציעות. מושלם כמשלים לאימונים אחרים.</p>
+        <p class="programs-plan-specs">4 שבועות · 3 אימונים בשבוע · 30 דקות</p>
+      </article>
+
+      <!-- Plan Card 5 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 15L20 10L30 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+            <path d="M10 25L20 20L30 25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+            <circle cx="20" cy="15" r="2" fill="currentColor"></circle>
+            <circle cx="20" cy="25" r="2" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <h3>שבוע עמוס אקספרס</h3>
+        <p>אימונים קצרים ויעילים למי שהזמן מוגבל. כל אימון ממוקד, אינטנסיבי ומספק תוצאות מקסימליות בזמן מינימלי. אידיאלי לאנשי מקצוע עסוקים.</p>
+        <p class="programs-plan-specs">6 שבועות · 3 אימונים בשבוע · 25 דקות</p>
+      </article>
+
+      <!-- Plan Card 6 -->
+      <article class="programs-plan-card">
+        <div class="programs-plan-icon">
+          <svg data-element-type="icon" data-icon-type="svg" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="10" stroke="currentColor" stroke-width="2" fill="none"></circle>
+            <path d="M20 10V20H30" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="20" cy="20" r="2" fill="currentColor"></circle>
+            <path d="M15 8L20 5L25 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+          </svg>
+        </div>
+        <h3>איזון מאוזן</h3>
+        <p>שילוב הרמוני של כוח, קרדיו, גמישות ומיינדפולנס. תוכנית כוללת לשמירה על בריאות גופנית ונפשית לאורך זמן, ללא לחץ מיותר.</p>
+        <p class="programs-plan-specs">12 שבועות · 3 אימונים בשבוע · 45 דקות</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- Bottom Divider: 3 parallel lines progressively shifting END -->
+  <div class="programs-plans-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="15" x2="1200" y2="15" stroke="var(--border-light)" stroke-width="1"></line>
+      <line x1="50" y1="30" x2="1200" y2="30" stroke="var(--border-light)" stroke-width="1"></line>
+      <line x1="100" y1="45" x2="1200" y2="45" stroke="var(--border-light)" stroke-width="1"></line>
+    </svg>
+  </div>
+</section>
+
+<section class="programs-methodology-section" data-layout-spec="Programs-methodology">
+  <div class="programs-methodology-container">
+    <div class="programs-methodology-content">
+      <h2 class="programs-methodology-title">המערכת מאחורי התוצאות</h2>
+      
+      <div class="programs-methodology-pillars">
+        <div class="programs-methodology-pillar">
+          <h3 class="programs-methodology-pillar-title">אימון (מבנה)</h3>
+          <p class="programs-methodology-pillar-text">תוכנית אימונים מובנית שמתקדמת איתך בקצב הנכון. כל אימון מותאם לרמה שלך ומאתגר אותך להתקדם צעד אחר צעד.</p>
+        </div>
+        
+        <div class="programs-methodology-pillar">
+          <h3 class="programs-methodology-pillar-title">תזונה (הרגלים פשוטים)</h3>
+          <p class="programs-methodology-pillar-text">ללא דיאטות קיצוניות או ספירת קלוריות אובססיבית. אנחנו מלמדים הרגלי תזונה פשוטים ובני קיימא שמתאימים לשגרת החיים שלך.</p>
+        </div>
+        
+        <div class="programs-methodology-pillar">
+          <h3 class="programs-methodology-pillar-title">התאושות (שגרה חוזרת)</h3>
+          <p class="programs-methodology-pillar-text">שינה איכותית, מתיחות ומנוחה פעילה. ההתאושות היא חלק בלתי נפרד מההתקדמות - אנחנו עוזרים לך להפוך אותה לשגרה.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="programs-methodology-visual">
+      <div class="programs-methodology-image-wrapper">
+        <img data-placeholder="programs-methodology-image-1" data-context="Professional fitness training scene in modern gym: athletic person performing strength exercise (like barbell squat or deadlift) with perfect form, clean bright lighting, motivational and energetic atmosphere, focus on proper technique and determination, modern equipment visible in background, authentic and inspiring composition for Israeli fitness business" width="600" height="700" src="/assets/site-programs-methodology-image-1.webp" alt="אימון כושר מקצועי בסטודיו" class="programs-methodology-image">
+      </div>
+      
+      <div class="programs-methodology-principles">
+        <div class="programs-methodology-principle-item">
+          <span class="programs-methodology-principle-number">01</span>
+          <p class="programs-methodology-principle-text">עומס מתקדם - כל שבוע אתגר חדש</p>
+        </div>
+        <div class="programs-methodology-principle-item">
+          <span class="programs-methodology-principle-number">02</span>
+          <p class="programs-methodology-principle-text">יעד חלבון יומי מותאם אישית</p>
+        </div>
+        <div class="programs-methodology-principle-item">
+          <span class="programs-methodology-principle-number">03</span>
+          <p class="programs-methodology-principle-text">שגרת שינה של 7-8 שעות</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="programs-methodology-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,50 L80,50 L80,40 L160,40 L160,30 L240,30 L240,25 L320,25 L320,20 L400,20 L400,18 L480,18 L480,15 L560,15 L560,13 L640,13 L640,12 L720,12 L720,10 L800,10 L800,9 L880,9 L880,8 L960,8 L960,7 L1040,7 L1040,6 L1120,6 L1120,5 L1200,5 L1200,60 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="programs-showcase-section" data-layout-spec="Programs-showcase">
+  <div class="programs-showcase-container">
+    <div class="programs-showcase-header">
+      <h2>איך נראה אימון אמיתי</h2>
+      <p>כל תוכנית מותאמת אישית לקצב החיים שלך – מכוח ועד גמישות, מחוץ ועד פנימה.</p>
+    </div>
+    
+    <div class="programs-showcase-gallery">
+      <div class="programs-showcase-large-tile">
+        <img data-placeholder="programs-showcase-image-1" data-context="Athletic person performing strength training with dumbbells in a modern fitness studio, natural lighting, focused expression, professional fitness photography for wellness brand" width="600" height="800" src="/assets/site-programs-showcase-image-1.webp" alt="אימון כוח באולם כושר מקצועי">
+      </div>
+      
+      <div class="programs-showcase-small-grid">
+        <div class="programs-showcase-small-tile">
+          <img data-placeholder="programs-showcase-image-2" data-context="Person doing mobility and stretching exercises on yoga mat, peaceful indoor setting, natural light, wellness and flexibility training" width="300" height="300" src="/assets/site-programs-showcase-image-2.webp" alt="תרגילי גמישות ומתיחה">
+        </div>
+        <div class="programs-showcase-small-tile">
+          <img data-placeholder="programs-showcase-image-3" data-context="Outdoor conditioning workout in urban park setting, person doing bodyweight exercises, morning golden hour light, active lifestyle" width="300" height="300" src="/assets/site-programs-showcase-image-3.webp" alt="אימון חיצוני בפארק">
+        </div>
+        <div class="programs-showcase-small-tile">
+          <img data-placeholder="programs-showcase-image-4" data-context="Calm recovery moment, person in relaxation pose on mat with towel and water bottle, serene wellness environment, post-workout cooldown" width="300" height="300" src="/assets/site-programs-showcase-image-4.webp" alt="רגע התאוששות שקט">
+        </div>
+        <div class="programs-showcase-small-tile">
+          <img data-placeholder="programs-showcase-image-5" data-context="Healthy meal prep with fresh vegetables, lean protein, and whole grains on kitchen counter, nutrition and wellness lifestyle photography" width="300" height="300" src="/assets/site-programs-showcase-image-5.webp" alt="הכנת ארוחה בריאה">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="programs-showcase-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,100 L0,40 L1200,60 L1200,100 Z" fill="var(--bg-dark)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="programs-cta-section" data-layout-spec="Programs-cta">
+  <div class="programs-cta-container">
+    <div class="programs-cta-content">
+      <h2 class="programs-cta-heading">קבלו המלצה מותאמת אישית בהודעה אחת</h2>
+      <p class="programs-cta-text">שלחו לנו הודעה קצרה עם המטרות שלכם ואנחנו נחזור אליכם עם תוכנית כושר מדויקת שמתאימה לאורח החיים והיעדים האישיים שלכם.</p>
+      <a href="/contact" class="programs-cta-button">צרו קשר עכשיו</a>
+      <p class="programs-cta-reassurance">נחזור אליכם תוך 24 שעות עם המלצה מקצועית ללא התחייבות</p>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl"><div class="footer-container"><div class="footer-grid"><div class="footer-section footer-about"><img src="/assets/business-logo.webp" alt="ביזכושר" class="logo" /><p class="footer-description">המרכז המוביל לכושר ובריאות בישראל. אנחנו כאן כדי לעזור לך להשיג את מטרות הכושר שלך ולחיות חיים בריאים יותר.</p><div class="social-links"><a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a><a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></div></div><div class="footer-section footer-links"><h3>קישורים מהירים</h3><ul><li><a href="/programs">תוכניות אימון</a></li><li><a href="/about">אודות</a></li><li><a href="/contact">צור קשר</a></li></ul></div><div class="footer-section footer-contact"><h3>יצירת קשר</h3><ul class="contact-list"><li><i class="fas fa-envelope"></i><a href="mailto:[business_email]">[business_email]</a></li><li><i class="fas fa-phone"></i><a href="tel:[business_phone]">[business_phone]</a></li><li><a href="/"><i class="fas fa-map-marker-alt"></i><span>[business_address]</span></a></li></ul></div></div><div class="footer-bottom"><div class="footer-legal"><a href="/privacy">מדיניות פרטיות</a><span class="separator">|</span><a href="/terms">תנאים והגבלות</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="מדיניות החזרות">
+              מדיניות החזרות
+            </a><span class="separator">|</span><a href="/accessibility">הצהרת נגישות</a></div><div class="footer-copyright"><p>© 2026 ביזכושר. כל הזכויות שמורות.</p><a href="https://zappy5.com" target="_blank" class="zappy-attribution">Generated by Zappy</a></div></div></div></footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <script src="/script.js"></script>
+
+    <div data-integration="accessibility:toolbar"></div>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body></html>
